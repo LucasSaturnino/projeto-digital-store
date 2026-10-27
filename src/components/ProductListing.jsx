@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
 
   @media (max-width: 992px) {
@@ -22,8 +22,8 @@ const ProductListing = ({ products = [] }) => {
       {products.map((prod, index) => (
         <ProductCard
           key={prod.id || index}
-          name={prod.name}
           image={prod.image}
+          name={prod.name}
           price={prod.price}
           priceDiscount={prod.priceDiscount}
         />

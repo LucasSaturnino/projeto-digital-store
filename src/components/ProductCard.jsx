@@ -24,7 +24,7 @@ const Card = styled.div`
     }
   }
 
-  .title {
+  .name {
     font-size: 24px;
     color: var(--dark-gray-2, #474747);
     margin: 12px 0 8px 0;
@@ -49,13 +49,13 @@ const Card = styled.div`
   }
 `;
 
-const ProductCard = ({ name, image, price, priceDiscount }) => {
+const ProductCard = ({ image, name, price, priceDiscount }) => {
   return (
     <Card>
       <div className="img-box">
         <img src={image} alt={name} />
       </div>
-      <div className="title">{name}</div>
+      <div className="name">{name}</div>
       <div className="price-box">
         {priceDiscount ? (
           <>

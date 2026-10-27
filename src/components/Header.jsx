@@ -7,13 +7,17 @@ const HeaderContainer = styled.header`
   background-color: var(--white);
   padding: 20px 100px;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.05);
+
+  @media (max-width: 768px) {
+    padding: 15px 20px;
+  }
 `;
 
 const TopHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 30px;
+  gap: 20px;
   margin-bottom: 20px;
 `;
 
@@ -39,7 +43,7 @@ const SearchBox = styled.div`
     right: 20px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 20px;
+    font-size: 26px;
     color: var(--light-gray);
     cursor: pointer;
   }
@@ -57,7 +61,7 @@ const UserArea = styled.div`
   }
 
   .btn-entrar {
-    width: 114px;
+    width: 120px;
     height: 40px;
     background-color: var(--primary);
     color: var(--white);
@@ -70,9 +74,8 @@ const UserArea = styled.div`
   }
 
   .cart-icon {
-    font-size: 24px;
+    font-size: 28px;
     color: var(--primary);
-    position: relative;
     cursor: pointer;
   }
 `;
@@ -108,6 +111,7 @@ const Header = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
+  // Redireciona para /produtos?filter=termo ao buscar
   const handleSearch = () => {
     if (searchTerm.trim()) {
       navigate(`/produtos?filter=${encodeURIComponent(searchTerm.trim())}`);
@@ -123,8 +127,10 @@ const Header = () => {
   return (
     <HeaderContainer>
       <TopHeader>
+        {/* 1. Componente Logo (253x44px) */}
         <Logo />
 
+        {/* 2. Campo de busca com ícone de lupa */}
         <SearchBox>
           <input
             type="text"
@@ -136,6 +142,7 @@ const Header = () => {
           <i className="pi pi-search" onClick={handleSearch} />
         </SearchBox>
 
+        {/* 3. Área de Redirecionamento (Cadastre-se / Entrar) e Carrinho */}
         <UserArea>
           <Link to="/cadastre-se" className="cadastre-se">Cadastre-se</Link>
           <Link to="/login" className="btn-entrar">Entrar</Link>
@@ -145,6 +152,7 @@ const Header = () => {
         </UserArea>
       </TopHeader>
 
+      {/* 4. Navegação Principal com links ativos */}
       <Nav>
         <NavLink to="/" end>Home</NavLink>
         <NavLink to="/produtos">Produtos</NavLink>

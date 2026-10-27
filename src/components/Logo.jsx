@@ -3,7 +3,7 @@ import React from 'react';
 const Logo = ({ variant = "default", width = "253px", height = "44px" }) => {
     // Definição das cores por variante
     const colors = {
-        default: { primary: "#C92071", text: "#1F1F1F" }, // Header
+        default: { primary: "#C92071", text: "#C92071" }, // Header
         white: { primary: "#FFFFFF", text: "#FFFFFF" }    // Footer
     };
 

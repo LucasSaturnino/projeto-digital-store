@@ -8,7 +8,7 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css'; 
 import 'primeflex/primeflex.css'; 
 
-// Seus estilos globais com as variáveis oficiais
+// Estilos globais com as variáveis oficiais
 import './index.css'; 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
