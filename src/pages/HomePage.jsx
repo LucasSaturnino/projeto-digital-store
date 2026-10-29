@@ -1,27 +1,45 @@
 import React from 'react';
 import styled from 'styled-components';
-import Gallery from '../components/Gallery';
+import HomeSlider from '../components/HomeSlider';
 import Section from '../components/Section';
 import ProductListing from '../components/ProductListing';
 import SpecialOffer from '../components/SpecialOffer';
 
-// Importação das Coleções e Propaganda
+// Importação das imagens do projeto (pasta src/assets)
 import collection1 from '../assets/collection-1.png';
 import collection2 from '../assets/collection-2.png';
 import collection3 from '../assets/collection-3.png';
-import LifestanceEsporte from '../assets/LifestanceEsporte.jpg';
+import TenisNikeemPassoDinamico from '../assets/TenisNikeemPassoDinamico.png';
+import LifestanceEsporte from '../assets/LifestanceEsporte.png';
 
 // Importação do catálogo central de produtos
 import { productsList } from '../data/products';
 
+// Banners do Carrossel Principal
 const homeSlides = [
   {
     badge: 'Melhores ofertas personalizadas',
+    title: 'Queima de estoque Nike 🔥',
+    description: 'Consequat culpa exercitation mollit nisi excepteur do do tempor laboris eiusmod irure consectetur.',
+    buttonText: 'Ver Ofertas',
+    image: TenisNikeemPassoDinamico,
+  },
+  {
+    badge: 'Oferta especial',
     title: 'Lifestance Esporte 🔥',
-    description: 'Aproveite o máximo do desempenho esporte com estilo incomparável.',
-    image: LifestanceEsporte
-  }
+    description: 'Aproveite o máximo do desempenho esportivo com estilo incomparável e conforto supremo.',
+    buttonText: 'Ver Ofertas',
+    image: LifestanceEsporte,
+  },
 ];
+
+const MainContent = styled.div`
+  padding: 40px 100px;
+
+  @media (max-width: 768px) {
+    padding: 20px 16px; /* Ajuste para o mobile ocupar a largura total com margem de 16px */
+  }
+`;
 
 const CollectionsGrid = styled.div`
   display: flex;
@@ -30,6 +48,7 @@ const CollectionsGrid = styled.div`
 
   @media (max-width: 768px) {
     flex-direction: column;
+    gap: 15px;
   }
 `;
 
@@ -40,6 +59,16 @@ const CollectionCard = styled.div`
   border-radius: 8px;
   padding: 30px;
   overflow: hidden;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .card-content {
+    position: relative;
+    z-index: 2;
+    max-width: 60%;
+  }
 
   .discount-badge {
     background-color: #E7FF86;
@@ -56,7 +85,12 @@ const CollectionCard = styled.div`
     font-size: 28px;
     color: var(--dark-gray, #1F1F1F);
     margin-bottom: 20px;
-    max-width: 180px;
+    line-height: 34px;
+
+    @media (max-width: 768px) {
+      font-size: 22px;
+      line-height: 26px;
+    }
   }
 
   button {
@@ -73,51 +107,64 @@ const CollectionCard = styled.div`
     position: absolute;
     right: 0;
     bottom: 0;
-    max-height: 180px;
+    height: 100%;
+    max-width: 100%;
     object-fit: contain;
+    object-position: right bottom;
+    z-index: 1;
+    pointer-events: none;
   }
 `;
 
 const HomePage = () => {
   return (
     <div>
-      {/* Banner de Destaque com Lifestance Esporte */}
-      <Gallery slides={homeSlides} />
+      {/* 1. Carrossel Principal com "Queima de estoque Nike" */}
+      <HomeSlider slides={homeSlides} />
 
-      <div style={{ padding: '40px 100px' }}>
-        {/* Coleções em Destaque */}
+      <MainContent>
+        {/* 2. Coleções em Destaque (SEM "Ver todos") */}
         <Section title="Coleções em destaque">
           <CollectionsGrid>
             <CollectionCard>
-              <span className="discount-badge">30% OFF</span>
-              <h3>Novo drop Supreme</h3>
-              <button>Comprar</button>
+              <div className="card-content">
+                <span className="discount-badge">30% OFF</span>
+                <h3>Novo drop Supreme</h3>
+                <button>Comprar</button>
+              </div>
               <img src={collection1} alt="Coleção Supreme" />
             </CollectionCard>
 
             <CollectionCard style={{ backgroundColor: '#E4E0E7' }}>
-              <span className="discount-badge">30% OFF</span>
-              <h3>Coleção Adidas</h3>
-              <button>Comprar</button>
+              <div className="card-content">
+                <span className="discount-badge">30% OFF</span>
+                <h3>Coleção Adidas</h3>
+                <button>Comprar</button>
+              </div>
               <img src={collection2} alt="Coleção Adidas" />
             </CollectionCard>
 
             <CollectionCard style={{ backgroundColor: '#E0ECEC' }}>
-              <span className="discount-badge">30% OFF</span>
-              <h3>Novo Beats Bass</h3>
-              <button>Comprar</button>
+              <div className="card-content">
+                <span className="discount-badge">30% OFF</span>
+                <h3>Novo Beats Bass</h3>
+                <button>Comprar</button>
+              </div>
               <img src={collection3} alt="Coleção Beats" />
             </CollectionCard>
           </CollectionsGrid>
         </Section>
 
-        {/* Produtos em Alta */}
-        <Section title="Produtos em alta" link={{ text: 'Ver todos →', href: '/produtos' }}>
+        {/* 3. Produtos em Alta */}
+        <Section
+          title="Produtos em alta"
+          link={{ text: 'Ver todos →', href: '/produtos' }}
+        >
           <ProductListing products={productsList} />
         </Section>
-      </div>
+      </MainContent>
 
-      {/* Oferta Especial */}
+      {/* 4. Banner Oferta Especial */}
       <SpecialOffer />
     </div>
   );
