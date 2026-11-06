@@ -1,11 +1,30 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
-const Card = styled.div`
+const Card = styled(Link)`
+  position: relative;
   background-color: var(--white, #FFFFFF);
   border-radius: 8px;
   padding: 12px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.05);
+
+  .discount-badge {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    background-color: var(--primary-light, #E7FF86);
+    color: var(--dark-gray, #1F1F1F);
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 12px;
+    border-radius: 29px;
+    z-index: 2;
+  }
 
   .img-box {
     width: 100%;
@@ -49,9 +68,11 @@ const Card = styled.div`
   }
 `;
 
-const ProductCard = ({ image, name, price, priceDiscount }) => {
+const ProductCard = ({ id, image, name, price, priceDiscount }) => {
   return (
-    <Card>
+    <Card to={`/product/${id}`}>
+      {priceDiscount && <span className="discount-badge">30% OFF</span>}
+
       <div className="img-box">
         <img src={image} alt={name} />
       </div>
@@ -59,11 +80,11 @@ const ProductCard = ({ image, name, price, priceDiscount }) => {
       <div className="price-box">
         {priceDiscount ? (
           <>
-            <span className="old-price">${price}</span>
-            <span className="current-price">${priceDiscount}</span>
+            <span className="old-price">R$ {price}</span>
+            <span className="current-price">R$ {priceDiscount}</span>
           </>
         ) : (
-          <span className="current-price">${price}</span>
+          <span className="current-price">R$ {price}</span>
         )}
       </div>
     </Card>

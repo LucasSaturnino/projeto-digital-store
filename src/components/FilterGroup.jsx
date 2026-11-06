@@ -1,24 +1,32 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const GroupContainer = styled.div`
-  margin-bottom: 25px;
+const Container = styled.div`
+  margin-bottom: 20px;
 
   h4 {
     font-size: 14px;
+    font-weight: bold;
     color: var(--dark-gray-2, #474747);
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    line-height: 22px;
   }
 `;
 
-const OptionItem = styled.label`
+const OptionList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+const OptionLabel = styled.label`
   display: flex;
   align-items: center;
   gap: 10px;
   font-size: 14px;
   color: var(--dark-gray-2, #474747);
-  margin-bottom: 10px;
   cursor: pointer;
+  user-select: none;
 
   input {
     width: 22px;
@@ -26,23 +34,46 @@ const OptionItem = styled.label`
     accent-color: var(--primary, #C92071);
     cursor: pointer;
   }
+
+  span {
+    line-height: 22px;
+  }
 `;
 
-const FilterGroup = ({ title, inputType = 'checkbox', options = [] }) => {
+const FilterGroup = ({
+  title,
+  inputType = 'checkbox',
+  options = [],
+  selectedValues = [],
+  onChange,
+}) => {
   return (
-    <GroupContainer>
+    <Container>
       <h4>{title}</h4>
-      {options.map((opt, index) => (
-        <OptionItem key={index}>
-          <input
-            type={inputType}
-            name={inputType === 'radio' ? title : undefined}
-            value={opt.value || opt.text}
-          />
-          <span>{opt.text}</span>
-        </OptionItem>
-      ))}
-    </GroupContainer>
+      <OptionList>
+        {options.map((option, index) => {
+          const optionValue = option.value || option.text;
+          const isChecked = Array.isArray(selectedValues)
+            ? selectedValues.includes(optionValue)
+            : selectedValues === optionValue;
+
+          return (
+            <OptionLabel key={index}>
+              <input
+                type={inputType}
+                name={title}
+                value={optionValue}
+                checked={isChecked}
+                onChange={(e) =>
+                  onChange && onChange(optionValue, e.target.checked, inputType)
+                }
+              />
+              <span>{option.text}</span>
+            </OptionLabel>
+          );
+        })}
+      </OptionList>
+    </Container>
   );
 };
 

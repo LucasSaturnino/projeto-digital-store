@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import Logo from './Logo';
 import styled from 'styled-components';
+import { useCart } from '../contexts/CartContext';
 
 const HeaderContainer = styled.header`
   background-color: var(--white);
@@ -21,12 +22,11 @@ const TopHeader = styled.div`
 
   @media (max-width: 768px) {
     display: grid;
-    grid-template-columns: 24px 1fr auto; /* Hambúrguer | Logo Centralizada | Ícones Direita */
+    grid-template-columns: 24px 1fr auto;
     align-items: center;
     gap: 15px;
   }
 `;
-
 
 const MenuIconButton = styled.button`
   display: none;
@@ -46,7 +46,6 @@ const MenuIconButton = styled.button`
   }
 `;
 
-/* Container da Logo Centralizada no Mobile (138x24px) */
 const LogoWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -66,7 +65,6 @@ const LogoWrapper = styled.div`
   }
 `;
 
-/* Busca exclusiva para Desktop (Totalmente oculta em telas <= 768px) */
 const DesktopSearchContainer = styled.div`
   position: relative;
   flex: 1;
@@ -108,7 +106,6 @@ const DesktopSearchContainer = styled.div`
   }
 `;
 
-/* Busca exclusiva para Mobile (Invisível no desktop, só aparece no mobile se acionada) */
 const MobileSearchContainer = styled.div`
   display: none;
 
@@ -246,9 +243,11 @@ const Header = () => {
   const [searchOpenMobile, setSearchOpenMobile] = useState(false);
   const navigate = useNavigate();
 
+  const { totalItems } = useCart();
+
   const handleSearch = () => {
     if (searchTerm.trim()) {
-      navigate(`/produtos?filter=${encodeURIComponent(searchTerm.trim())}`);
+      navigate(`/produtos?search=${encodeURIComponent(searchTerm.trim())}`);
     }
   };
 
@@ -299,14 +298,13 @@ const Header = () => {
             </Link>
           </div>
 
-          <div className="cart-box">
+          <Link to="/carrinho" className="cart-box" style={{ textDecoration: 'none' }}>
             <i className="pi pi-shopping-cart" />
-            <span className="badge">2</span>
-          </div>
+            {totalItems > 0 && <span className="badge">{totalItems}</span>}
+          </Link>
         </UserArea>
       </TopHeader>
 
-      {/* Busca Mobile expansível (315x60px) - Só existe e aparece em telas <= 768px */}
       <MobileSearchContainer $open={searchOpenMobile}>
         <input
           type="text"
@@ -318,7 +316,6 @@ const Header = () => {
         <i className="pi pi-search search-icon-inside" onClick={handleSearch} />
       </MobileSearchContainer>
 
-      {/* Menu de Navegação retrátil */}
       <Nav $open={menuOpen}>
         <NavLink to="/" end onClick={() => setMenuOpen(false)}>Home</NavLink>
         <NavLink to="/produtos" onClick={() => setMenuOpen(false)}>Produtos</NavLink>
