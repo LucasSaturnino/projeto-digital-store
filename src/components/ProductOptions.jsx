@@ -24,31 +24,28 @@ const OptionButton = styled.button`
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  border-radius: ${(props) => props.$radius};
   transition: all 0.2s ease-in-out;
 
-  /* Estilização quando for do tipo COR (Círculo) */
   ${(props) =>
     props.$isColor
       ? `
-    width: 31px;
-    height: 31px;
-    background-color: ${props.$colorValue};
-    border: ${props.$isSelected ? '2px solid var(--primary, #C92071)' : '2px solid transparent'};
-    outline: ${props.$isSelected ? '2px solid var(--primary, #C92071)' : 'none'};
-    outline-offset: 2px;
-  `
+        width: 31px;
+        height: 31px;
+        background-color: ${props.$colorValue};
+        border: ${props.$isSelected ? '2px solid var(--primary, #C92071)' : '2px solid transparent'};
+        outline: ${props.$isSelected ? '2px solid var(--primary, #C92071)' : 'none'};
+        outline-offset: 2px;
+      `
       : `
-    /* Estilização quando for do tipo TAMANHO/TEXTO (Quadrado) */
-    min-width: 46px;
-    height: 46px;
-    padding: 0 12px;
-    font-size: 24px;
-    font-weight: bold;
-    color: ${props.$isSelected ? '#FFFFFF' : 'var(--dark-gray-2, #474747)'};
-    background-color: ${props.$isSelected ? 'var(--primary, #C92071)' : '#FFFFFF'};
-    border: ${props.$isSelected ? '2px solid var(--primary, #C92071)' : '1px solid var(--light-gray-2, #CCCCCC)'};
-    border-radius: ${props.$radius};
-  `}
+        width: 48px;
+        height: 48px;
+        font-size: 16px;
+        font-weight: bold;
+        color: ${props.$isSelected ? '#FFFFFF' : 'var(--dark-gray-2, #474747)'};
+        background-color: ${props.$isSelected ? 'var(--primary, #C92071)' : '#FFFFFF'};
+        border: ${props.$isSelected ? '2px solid var(--primary, #C92071)' : '1px solid var(--light-gray-2, #CCCCCC)'};
+      `}
 
   &:hover {
     border-color: var(--primary, #C92071);
@@ -64,15 +61,10 @@ const ProductOptions = ({
   selectedValue,
   onChange,
 }) => {
-  const [internalSelected, setInternalSelected] = useState(options[0]);
-
-  // Permite uso controlado ou não-controlado
-  const currentSelected = selectedValue !== undefined ? selectedValue : internalSelected;
+  const [selected, setSelected] = useState(selectedValue || options[0]);
 
   const handleSelect = (option) => {
-    if (selectedValue === undefined) {
-      setInternalSelected(option);
-    }
+    setSelected(option);
     if (onChange) {
       onChange(option);
     }
@@ -80,6 +72,9 @@ const ProductOptions = ({
 
   const isColorType = type === 'color' || shape === 'circle';
   const computedRadius = isColorType ? '50%' : radius;
+
+  // Sincroniza o estado interno caso a prop `selectedValue` mude externamente
+  const currentSelected = selectedValue !== undefined ? selectedValue : selected;
 
   return (
     <Container>
@@ -97,7 +92,7 @@ const ProductOptions = ({
               $isSelected={isSelected}
               onClick={() => handleSelect(option)}
               type="button"
-              aria-label={isColorType ? `Cor ${option}` : `Tamanho ${option}`}
+              aria-label={option}
             >
               {!isColorType && option}
             </OptionButton>

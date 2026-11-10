@@ -23,7 +23,7 @@ export const productsList = [
     rating: 30,
     description: 'Tênis K-Swiss V8 ideal para treinos e uso casual, oferecendo excelente durabilidade e aderência.',
     sizes: ['39', '40', '41', '42', '43'],
-    colors: ['#6FEEFF', '#FF6969', '#5E5E5E', '#6D5200']
+    colors: ['#6FEEFF', '#FF6969', '#5E5E5E']
   },
   {
     id: 2,
@@ -38,7 +38,7 @@ export const productsList = [
     rating: 45,
     description: 'O clássico Adidas Superstar com biqueira emborrachada e design icônico para compor qualquer estilo urbano.',
     sizes: ['38', '39', '40', '41'],
-    colors: ['#000000', '#FFFFFF', '#FF6969']
+    colors: ['#000000', '#FFFFFF']
   },
   {
     id: 3,
@@ -53,7 +53,7 @@ export const productsList = [
     rating: 60,
     description: 'O tradicional Chuck Taylor All-Star cano baixo, versátil e perfeito para o dia a dia.',
     sizes: ['37', '38', '39', '40', '41'],
-    colors: ['#000000', '#FFFFFF', '#5E5E5E']
+    colors: ['#000000', '#FFFFFF']
   },
   {
     id: 4,
@@ -61,14 +61,14 @@ export const productsList = [
     reference: 'Casual | Nike | REF:77416744',
     category: 'Tênis',
     image: NikeAirMaxRed,
-    images: [NikeAirMaxRed, NikeAirMaxSneakersRunning],
+    images: [NikeAirMaxRed, NikeAirMaxRed],
     price: 400,
     priceDiscount: 299,
     stars: 4.9,
     rating: 120,
     description: 'Nike Air Max com detalhes em vermelho, garantindo estilo marcante e amortecimento premium.',
     sizes: ['39', '40', '41', '42', '43'],
-    colors: ['#FF6969', '#5E5E5E', '#6FEEFF']
+    colors: ['#FF6969', '#5E5E5E']
   },
   {
     id: 5,
@@ -76,14 +76,14 @@ export const productsList = [
     reference: 'Casual | Nike | REF:38416711',
     category: 'Tênis',
     image: NikeAirMaxSneakersRunning,
-    images: [NikeAirMaxSneakersRunning, NikeAirMaxRed, TenisNikeAirMax, AirJordanNikeToe, AdidasSuperstar],
+    images: [NikeAirMaxSneakersRunning, NikeAirMaxSneakersRunning, NikeAirMaxSneakersRunning],
     price: 450,
     priceDiscount: 320,
     stars: 4.7,
     rating: 90,
     description: 'Tênis Nike Air Max de alta performance e máximo conforto para corrida e uso casual no dia a dia. Cabedal em mesh respirável e amortecimento Air Max clássico.',
     sizes: ['39', '40', '41', '42', '43'],
-    colors: ['#6FEEFF', '#FF6969', '#5E5E5E', '#6D5200']
+    colors: ['#6FEEFF', '#FF6969', '#5E5E5E']
   },
   {
     id: 6,
@@ -91,14 +91,14 @@ export const productsList = [
     reference: 'Esporte | Adidas | REF:99416755',
     category: 'Sapatilhas',
     image: AdidasSapatilhasFeminina,
-    images: [AdidasSapatilhasFeminina, AdidasSuperstar],
+    images: [AdidasSapatilhasFeminina, AdidasSapatilhasFeminina],
     price: 180,
     priceDiscount: 120,
     stars: 4.4,
     rating: 25,
     description: 'Sapatilha leve e confortável da Adidas voltada para o público feminino.',
     sizes: ['35', '36', '37', '38', '39'],
-    colors: ['#FF6969', '#FFFFFF', '#5E5E5E']
+    colors: ['#FF6969', '#FFFFFF']
   },
   {
     id: 7,
@@ -106,14 +106,14 @@ export const productsList = [
     reference: 'Casual | New Balance | REF:22416766',
     category: 'Tênis',
     image: NewBalanceShoe,
-    images: [NewBalanceShoe, KSwissSneakersTennis],
+    images: [NewBalanceShoe, NewBalanceShoe],
     price: 350,
     priceDiscount: 240,
     stars: 4.5,
     rating: 55,
     description: 'Estilo e conforto incomparáveis com o design clássico da New Balance.',
     sizes: ['38', '39', '40', '41', '42', '43'],
-    colors: ['#5E5E5E', '#FFFFFF', '#6FEEFF']
+    colors: ['#5E5E5E', '#FFFFFF']
   },
   {
     id: 8,
@@ -121,13 +121,13 @@ export const productsList = [
     reference: 'Esporte | Nike | REF:11416777',
     category: 'Tênis',
     image: TenisNikeAirMax,
-    images: [TenisNikeAirMax, NikeAirMaxSneakersRunning],
+    images: [TenisNikeAirMax, TenisNikeAirMax],
     price: 380,
     priceDiscount: 260,
     stars: 4.7,
     rating: 80,
     description: 'Amortecimento clássico Air Max com excelente suporte para atividades físicas e uso urbano.',
     sizes: ['39', '40', '41', '42', '43'],
-    colors: ['#6FEEFF', '#5E5E5E', '#FF6969']
+    colors: ['#6FEEFF', '#5E5E5E']
   },
 ];

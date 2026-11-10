@@ -49,6 +49,13 @@ const MenuIconButton = styled.button`
 const LogoWrapper = styled.div`
   display: flex;
   align-items: center;
+  cursor: pointer;
+
+  a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+  }
 
   @media (max-width: 768px) {
     justify-content: center;
@@ -110,7 +117,7 @@ const MobileSearchContainer = styled.div`
   display: none;
 
   @media (max-width: 768px) {
-    display: ${(props) => (props.$open ? 'block' : 'none')};
+    display: ${(props) => (props.$isOpen ? 'block' : 'none')};
     width: 315px;
     max-width: 100%;
     margin: 15px auto 0 auto;
@@ -182,146 +189,137 @@ const UserArea = styled.div`
       justify-content: center;
     }
   }
-
-  .cart-box {
-    position: relative;
-    font-size: 24px;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--primary);
-    cursor: pointer;
-
-    .badge {
-      position: absolute;
-      top: -6px;
-      right: -8px;
-      background-color: var(--primary);
-      color: var(--white);
-      font-size: 11px;
-      font-weight: bold;
-      border-radius: 50%;
-      width: 17px;
-      height: 17px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-  }
 `;
 
-const Nav = styled.nav`
+const NavMenu = styled.nav`
   display: flex;
   gap: 30px;
-  margin-top: 20px;
+  margin-top: 25px;
 
   @media (max-width: 768px) {
-    display: ${(props) => (props.$open ? 'flex' : 'none')};
+    display: ${(props) => (props.$isMenuOpen ? 'flex' : 'none')};
     flex-direction: column;
-    padding-top: 15px;
-    border-top: 1px solid var(--light-gray-3);
+    gap: 15px;
     margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--light-gray-2, #CCCCCC);
   }
 
   a {
-    font-size: 16px;
-    color: var(--dark-gray-2);
     text-decoration: none;
+    color: var(--dark-gray-2);
+    font-size: 16px;
+    transition: color 0.2s;
 
     &.active {
       color: var(--primary);
       font-weight: bold;
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 2px;
+    }
+
+    &:hover {
+      color: var(--primary);
     }
   }
 `;
 
 const Header = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [searchOpenMobile, setSearchOpenMobile] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
-
   const { totalItems } = useCart();
 
-  const handleSearch = () => {
-    if (searchTerm.trim()) {
-      navigate(`/produtos?search=${encodeURIComponent(searchTerm.trim())}`);
+  const handleSearch = (e) => {
+    if ((e.key === 'Enter' || e.type === 'click') && searchQuery.trim()) {
+      navigate(`/produtos?search=${encodeURIComponent(searchQuery.trim())}`);
+      setIsMobileSearchOpen(false);
     }
   };
 
   return (
     <HeaderContainer>
       <TopHeader>
-        <MenuIconButton onClick={() => setMenuOpen(!menuOpen)}>
-          <i className={menuOpen ? "pi pi-times" : "pi pi-bars"} />
+        <MenuIconButton onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          <i className={isMobileMenuOpen ? "pi pi-times" : "pi pi-bars"} />
         </MenuIconButton>
 
         <LogoWrapper>
-          <Logo />
+          <Link to="/">
+            <Logo />
+          </Link>
         </LogoWrapper>
 
         <DesktopSearchContainer>
           <input
             type="text"
-            placeholder="pesquisar produto..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+            placeholder="Pesquisar produto..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleSearch}
           />
           <i className="pi pi-search search-icon-inside" onClick={handleSearch} />
         </DesktopSearchContainer>
 
         <UserArea>
-          <i
-            className="pi pi-search mobile-search-toggle"
-            onClick={() => setSearchOpenMobile(!searchOpenMobile)}
-          />
+          <div className="mobile-search-toggle" onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}>
+            <i className="pi pi-search" />
+          </div>
 
           <div className="desktop-only">
-            <Link to="/cadastre-se" style={{ color: 'var(--dark-gray-2)', textDecoration: 'underline' }}>
+            <Link to="/cadastrar" style={{ color: 'var(--dark-gray-2)', textDecoration: 'underline', fontSize: '16px' }}>
               Cadastre-se
             </Link>
-            <Link
-              to="/login"
-              style={{
-                backgroundColor: 'var(--primary)',
-                color: 'var(--white)',
-                padding: '10px 24px',
-                borderRadius: '4px',
-                fontWeight: 'bold',
-                textDecoration: 'none'
-              }}
-            >
-              Entrar
+            <Link to="/entrar">
+              <button style={{ backgroundColor: 'var(--primary)', color: 'var(--white)', border: 'none', borderRadius: '8px', padding: '10px 25px', fontSize: '14px', fontWeight: 'bold', cursor: 'pointer' }}>
+                Entrar
+              </button>
             </Link>
           </div>
 
-          <Link to="/carrinho" className="cart-box" style={{ textDecoration: 'none' }}>
+          <Link to="/carrinho" style={{ position: 'relative', color: 'var(--primary)', fontSize: '24px', display: 'flex', alignItems: 'center' }}>
             <i className="pi pi-shopping-cart" />
-            {totalItems > 0 && <span className="badge">{totalItems}</span>}
+            {totalItems > 0 && (
+              <span style={{
+                position: 'absolute',
+                top: '-8px',
+                right: '-8px',
+                backgroundColor: 'var(--error, #EE4266)',
+                color: '#FFFFFF',
+                fontSize: '12px',
+                fontWeight: 'bold',
+                width: '18px',
+                height: '18px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                {totalItems}
+              </span>
+            )}
           </Link>
         </UserArea>
       </TopHeader>
 
-      <MobileSearchContainer $open={searchOpenMobile}>
+      <MobileSearchContainer $isOpen={isMobileSearchOpen}>
         <input
           type="text"
-          placeholder="pesquisar produto..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+          placeholder="Pesquisar produto..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={handleSearch}
         />
         <i className="pi pi-search search-icon-inside" onClick={handleSearch} />
       </MobileSearchContainer>
 
-      <Nav $open={menuOpen}>
-        <NavLink to="/" end onClick={() => setMenuOpen(false)}>Home</NavLink>
-        <NavLink to="/produtos" onClick={() => setMenuOpen(false)}>Produtos</NavLink>
-        <NavLink to="/categorias" onClick={() => setMenuOpen(false)}>Categorias</NavLink>
-        <NavLink to="/meus-pedidos" onClick={() => setMenuOpen(false)}>Meus Pedidos</NavLink>
-      </Nav>
+      <NavMenu $isMenuOpen={isMobileMenuOpen}>
+        <NavLink to="/" end onClick={() => setIsMobileMenuOpen(false)}>Home</NavLink>
+        <NavLink to="/produtos" onClick={() => setIsMobileMenuOpen(false)}>Produtos</NavLink>
+        <NavLink to="/categorias" onClick={() => setIsMobileMenuOpen(false)}>Categorias</NavLink>
+        <NavLink to="/pedidos" onClick={() => setIsMobileMenuOpen(false)}>Meus Pedidos</NavLink>
+      </NavMenu>
     </HeaderContainer>
   );
 };

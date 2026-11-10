@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import FilterGroup from '../components/FilterGroup';
 import ProductListing from '../components/ProductListing';
 import { productsList } from '../data/products';
+import { useSearchParams } from 'react-router-dom';
 
 const PageContainer = styled.div`
   padding: 40px 100px;
@@ -33,6 +34,37 @@ const HeaderSection = styled.div`
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
+    width: 100%;
+  }
+`;
+
+const ControlsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: space-between;
+  }
+`;
+
+const MobileFilterButton = styled.button`
+  display: none;
+  
+  @media (max-width: 768px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background-color: var(--primary, #C92071);
+    color: var(--white, #FFFFFF);
+    border: none;
+    border-radius: 4px;
+    font-size: 20px;
+    cursor: pointer;
+    flex-shrink: 0;
   }
 `;
 
@@ -52,7 +84,8 @@ const OrderSelect = styled.select`
   }
 
   @media (max-width: 768px) {
-    width: 100%;
+    flex: 1;
+    height: 60px;
   }
 `;
 
@@ -78,6 +111,18 @@ const Sidebar = styled.aside`
     font-weight: bold;
     color: var(--dark-gray-2, #474747);
     margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .close-filter {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--dark-gray, #1F1F1F);
   }
 
   hr {
@@ -87,7 +132,34 @@ const Sidebar = styled.aside`
   }
 
   @media (max-width: 768px) {
-    width: 100%;
+    position: fixed;
+    top: 0;
+    left: ${(props) => (props.$isOpen ? '0' : '-100%')};
+    width: 80%;
+    max-width: 300px;
+    height: 100vh;
+    z-index: 1000;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2);
+    transition: left 0.3s ease-in-out;
+    overflow-y: auto;
+
+    .close-filter {
+      display: block;
+    }
+  }
+`;
+
+const Overlay = styled.div`
+  display: none;
+  @media (max-width: 768px) {
+    display: ${(props) => (props.$isOpen ? 'block' : 'none')};
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
   }
 `;
 
@@ -101,8 +173,11 @@ const ProductListingPage = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedGenders, setSelectedGenders] = useState([]);
   const [selectedState, setSelectedState] = useState('');
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  // Opções de filtro especificadas no protótipo do Figma
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get('search')?.toLowerCase() || '';
+
   const brandOptions = [
     { text: 'Adidas', value: 'Adidas' },
     { text: 'Calenciaga', value: 'Calenciaga' },
@@ -129,7 +204,6 @@ const ProductListingPage = () => {
     { text: 'Usado', value: 'Usado' },
   ];
 
-  // Manipulador genérico para checkbox e radio
   const handleFilterChange = (setter) => (value, checked, inputType) => {
     if (inputType === 'radio') {
       setter(value);
@@ -140,18 +214,26 @@ const ProductListingPage = () => {
     }
   };
 
-  // Filtragem e Ordenação dinâmica da lista de produtos
   const processedProducts = useMemo(() => {
     let result = [...productsList];
 
-    // 1. Filtro por Marca
+    // 1. Filtro por Termo de Pesquisa (URL)
+    if (searchQuery) {
+      result = result.filter((p) =>
+        p.name.toLowerCase().includes(searchQuery) ||
+        p.category.toLowerCase().includes(searchQuery) ||
+        (p.description && p.description.toLowerCase().includes(searchQuery))
+      );
+    }
+
+    // 2. Filtro por Marca
     if (selectedBrands.length > 0) {
       result = result.filter((p) =>
         selectedBrands.some((b) => p.name.toLowerCase().includes(b.toLowerCase()))
       );
     }
 
-    // 2. Ordenação por preço
+    // 3. Ordenação por preço
     if (sortOrder === 'menor') {
       result.sort(
         (a, b) => (a.priceDiscount || a.price) - (b.priceDiscount || b.price)
@@ -163,27 +245,38 @@ const ProductListingPage = () => {
     }
 
     return result;
-  }, [selectedBrands, sortOrder]);
+  }, [selectedBrands, sortOrder, searchQuery]);
 
   return (
     <PageContainer>
       <HeaderSection>
         <h2>
-          <strong>Resultados para "Tênis"</strong> - {processedProducts.length} produtos
+          <strong>{searchQuery ? `Busca: "${searchQuery}"` : 'Resultados para "Tênis"'}</strong> - {processedProducts.length} produtos
         </h2>
-        <OrderSelect
-          value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value)}
-        >
-          <option value="relevantes">Ordenar por: mais relevantes</option>
-          <option value="menor">Ordenar por: menor preço</option>
-          <option value="maior">Ordenar por: maior preço</option>
-        </OrderSelect>
+        <ControlsWrapper>
+          <OrderSelect
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+          >
+            <option value="relevantes">Ordenar por: mais relevantes</option>
+            <option value="menor">Ordenar por: menor preço</option>
+            <option value="maior">Ordenar por: maior preço</option>
+          </OrderSelect>
+
+          <MobileFilterButton onClick={() => setIsFilterOpen(true)}>
+            <i className="pi pi-filter" />
+          </MobileFilterButton>
+        </ControlsWrapper>
       </HeaderSection>
 
+      <Overlay $isOpen={isFilterOpen} onClick={() => setIsFilterOpen(false)} />
+
       <ContentLayout>
-        <Sidebar>
-          <div className="filter-title">Filtrar por</div>
+        <Sidebar $isOpen={isFilterOpen}>
+          <div className="filter-title">
+            Filtrar por
+            <button className="close-filter" onClick={() => setIsFilterOpen(false)}>✕</button>
+          </div>
           <hr />
 
           <FilterGroup

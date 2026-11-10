@@ -7,7 +7,7 @@ import ProductListing from '../components/ProductListing';
 import BuyBox from '../components/BuyBox';
 import ProductOptions from '../components/ProductOptions';
 import { productsList } from '../data/products';
-import { useCart } from '../contexts/CartContext'; 
+import { useCart } from '../contexts/CartContext';
 
 const PageContainer = styled.div`
   padding: 40px 100px;
@@ -57,11 +57,9 @@ const ProductViewPage = () => {
   const [selectedSize, setSelectedSize] = useState(product.sizes?.[0] || '39');
   const [selectedColor, setSelectedColor] = useState(product.colors?.[0] || '#6FEEFF');
 
-  // Hook do contexto do carrinho
   const { addToCart } = useCart();
 
   const handleBuyClick = () => {
-    // Adiciona o produto real ao contexto global mantendo tamanho e cor selecionados
     addToCart(product, selectedSize, selectedColor, 1);
   };
 
